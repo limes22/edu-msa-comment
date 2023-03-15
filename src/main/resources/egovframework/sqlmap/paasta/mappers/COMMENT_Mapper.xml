@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="paasta.msa.service.impl.CommentMapper">
+
+	<select id="getCommentCount" parameterType="hashMap" resultType="hashMap">
+		SELECT
+			COUNT(*) AS COUNT
+		FROM TB_COMMENT
+		WHERE board_seq = #{boardSeq}
+	</select>
+
+	<select id="getCommentList" parameterType="hashMap" resultType="hashMap">
+		SELECT
+			comment_seq 		AS commentSeq
+			, comment 			AS comment
+			, write_user_id 	AS writeUserId
+			, write_user_name 	AS writeUserName
+			, DATE_FORMAT(create_dt,'%Y-%m-%d %H:%i:%s')		AS createDt
+			, DATE_FORMAT(update_dt,'%Y-%m-%d %H:%i:%s')		AS updateDt
+		FROM TB_COMMENT
+		WHERE board_seq = #{boardSeq}
+	</select>
+
+	<insert id="postComment" parameterType="hashMap" useGeneratedKeys="true" keyProperty="commentSeq">
+		INSERT INTO TB_COMMENT
+		(
+			board_seq
+			, comment
+			, write_user_id
+			, write_user_name
+			, create_dt
+			, update_dt
+		) VALUES (
+			#{boardSeq}
+			, #{comment}
+			, #{writeUserId}
+			, #{writeUserName}
+			, now()
+			, now()
+		)
+	</insert>
+
+	<update id="putComment" parameterType="hashMap">
+		UPDATE TB_COMMENT
+		<set>
+			<if test="comment != null and !comment.equals('')">
+				comment = #{comment},
+			</if>
+			update_dt = now()
+		</set>
+		WHERE comment_seq = #{commentSeq}
+		AND	  write_user_id = #{writeUserId}
+	</update>
+
+	<delete id="deleteComment" parameterType="hashMap">
+		DELETE FROM TB_COMMENT
+		WHERE comment_seq = #{commentSeq}
+	</delete>
+
+</mapper>
