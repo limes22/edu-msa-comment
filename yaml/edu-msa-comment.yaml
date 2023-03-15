@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edu-msa-comment
+  labels:
+    app: comment-msa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comment-msa
+  template:
+    metadata:
+      labels:
+        app: comment-msa
+    spec:
+      containers:
+      - name: comment-msa
+        image: howdi2000/edu-msa-comment:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 28083    
+      imagePullSecrets:
+         - name: edu-msa-secret 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edu-msa-comment
+  labels:
+    app: comment-msa  
+spec:
+  ports:
+  - nodePort: 32006
+    port: 28083
+    protocol: TCP
+    targetPort: 28083
+  selector:
+    app: comment-msa
+  type: NodePort
+
