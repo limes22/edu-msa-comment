@@ -29,7 +29,7 @@ pipeline
             steps 
             { 
               withSonarQubeEnv('sonarscanner') {
-                sh "mvn clean package sonar:sonar"
+                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=msa-sonarqube -Dsonar.login=sqp_b0983cf3e276f75424924b70a0971cd4ef8ff7e0"
               }
             }       
       }
