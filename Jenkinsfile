@@ -14,17 +14,8 @@ pipeline
   }
     tools {
         maven 'maven'
-        sonarscanner 'sonarscanner'
     }
     stages {
-        stage('SonarQube Analysis') {
-            withSonarQubeEnv(sonarscanner) {
-            sh ''' mvn clean verify sonar:sonar \
-             -Dsonar.projectKey=devops-workshop \
-             -Dsonar.host.url=http://192.168.71.136:9000/sonarqube \
-             -Dsonar.login=sqp_c4050454a71e43d23379496b7297c522b164992 '''
-          }
-        }
     	stage('parameter check')
     	{
     		steps
@@ -33,6 +24,15 @@ pipeline
     			 sh 'mvn -version'
     		}
     	}
+        stage('SonarQube analysis') {
+            agent any
+            steps 
+            { 
+              withSonarQubeEnv('sonarscanner') {
+                sh "mvn clean package sonar:sonar"
+              }
+            }       
+      }
         stage('build')
         {
             steps {
@@ -68,5 +68,6 @@ pipeline
             '''
         }
     }
+
         }
     }
