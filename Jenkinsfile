@@ -36,9 +36,10 @@ pipeline
         {
             steps {
             	sh 'pwd'
-                sh 'mvn -f pom.xml clean install -P release'
+                sh 'mvn install'
+                // sh 'mvn -f pom.xml clean install -P release'
               	// archive '**/target/*.war'
-                sh 'cp $WORKSPACE/target/*.war $WORKSPACE'
+                // sh 'cp $WORKSPACE/target/*.war $WORKSPACE'
             }
         }
 
