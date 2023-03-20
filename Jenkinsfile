@@ -10,10 +10,6 @@ pipeline
     REPOSITORY = "howdi2000/edu-msa-comment"
     DOCKERHUB_CREDENTIALS = credentials('docker-hub')
     DOCKER_TAG = "1.0.${BUILD_NUMBER}"
-    DEPLOY_GITREPO_USER = "limes22"
-    DEPLOY_GITREPO_URL = "github.com/limes22/edu-msa-comment.git"
-    DEPLOY_GITREPO_BRANCH = "main"
-    DEPLOY_GITREPO_TOKEN = credentials('github-secret')
   }
     tools {
         maven 'maven'
@@ -85,26 +81,16 @@ pipeline
                 sh "git commit -m '[UPDATE] ${REPOSITORY} ${BUILD_NUMBER} image versioning'"
                 sh "git push -uf origin main"
              }
-            // withCredentials([gitUsernamePassword(credentialsId: 'github-login', gitToolName: 'github-tool')]) {
-            //     sh '''
-            //     git config --global user.email howdi2002@naver.com
-            //     git config --global user.name limes22
-            //     cd $WORKSPACE
-            //     sed -i 's|howdi2000/edu-msa-commnet:1.0.*|howdi2000/edu-msa-commnet:1.0.${BUILD_NUMBER}|' $WORKSPACE/yaml/edu-msa-comment.yaml
-            //     git add .
-            //     git commit -m '[UPDATE] ${REPOSITORY} ${BUILD_NUMBER} image versioning'
-            //     git push -uf origin main
-            //         '''
                 }    
         }
-        // post {
-        //         failure {
-        //           echo 'K8S Manifest Update failure !'
-        //         }
-        //         success {
-        //           echo 'K8S Manifest Update success !'
-        //         }
-        // }
+        post {
+                failure {
+                  echo 'K8S Manifest Update failure !'
+                }
+                success {
+                  echo 'K8S Manifest Update success !'
+                }
+        }
     }
 
         }
