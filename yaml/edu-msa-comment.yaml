@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: comment-msa
-        image: howdi2000/edu-msa-comment:1.0.0
+        image: howdi2000/edu-msa-comment:1.0.9
         imagePullPolicy: Always
         ports:
         - containerPort: 28083    
