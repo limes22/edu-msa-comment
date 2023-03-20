@@ -75,7 +75,6 @@ pipeline
         stage('K8S Manifest Update') {
         steps {
             sh '''
-                git remote add origin https://github.com/limes22/edu-msa-comment.git
                 git config --global user.email howdi2002@naver.com
                 git config --global user.name limes22
                 sed -i 's|$REPOSITORY:1.0.*|$REPOSITORY:1.0.$BUILD_NUMBER|' ./yaml/edu-msa-comment.yaml '''
