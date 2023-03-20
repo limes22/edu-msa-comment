@@ -76,8 +76,8 @@ pipeline
                 branch: 'main'
 
             sh '''
-                sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' deployment.yaml
-                git add deployment.yaml
+                sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' ./yaml/edu-msa-comment.yaml
+                git add ./yaml/edu-msa-comment.yaml
                 git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
                 git remote set-url origin https://github.com/limes22/edu-msa-comment.git
                 git push -u origin main
