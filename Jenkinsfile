@@ -9,8 +9,11 @@ pipeline
     environment {
     REPOSITORY = "howdi2000/edu-msa-comment"
     DOCKERHUB_CREDENTIALS = credentials('docker-hub')
-    DOCKER_IMAGE = "${REPOSITORY}/${params.DOCKER_IMAGE_NAME}"
-    DOCKER_TAG = "${params.DOCKER_TAG}"
+    DOCKER_TAG = "1.0.${BUILD_NUMBER}"
+    DEPLOY_GITREPO_USER = "limes22"
+    DEPLOY_GITREPO_URL = "github.com/limes22/edu-msa-comment.git"
+    DEPLOY_GITREPO_BRANCH = "main"
+    DEPLOY_GITREPO_TOKEN = credentials('github-secret')
   }
     tools {
         maven 'maven'
@@ -49,7 +52,7 @@ pipeline
             }
             steps {
                 dir("${env.WORKSPACE}") { // /java_home/workspace/10/
-                    sh 'docker build -t $REPOSITORY:$BUILD_NUMBER .'
+                    sh 'docker build -t $REPOSITORY:$DOCKER_TAG .'
                 }
             }
             post {
@@ -64,26 +67,25 @@ pipeline
         steps {
             sh'''
                 echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                docker push $REPOSITORY:$BUILD_NUMBER
+                docker push $REPOSITORY:$DOCKER_TAG
             '''
         }
     }
 
         stage('K8S Manifest Update') {
         steps {
-            git credentialsId: '{github-secret}',
-                url: 'https://github.com/limes22/edu-msa-comment.git',
-                branch: 'main'
-
             sh '''
                 git remote set-url origin https://github.com/limes22/edu-msa-comment.git
                 git config global user.email howdi2002@naver.com
                 git config global user.name limes22
-                sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' ./yaml/edu-msa-comment.yaml
-                git add ./yaml/edu-msa-comment.yaml
-                git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
-                git push -u origin main
-            '''
+                sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' ./yaml/edu-msa-comment.yaml '''
+                withCredentials([gitUsernamePassword(credentialsId: 'github-login', gitToolName: 'github-tool')]) {
+                    sh '''
+                        git add ./yaml/edu-msa-comment.yaml
+                        git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
+                        git push -u origin main
+                    '''
+                }    
         }
         post {
                 failure {
