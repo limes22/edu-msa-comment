@@ -97,14 +97,14 @@ pipeline
             //         '''
                 }    
         }
-        post {
-                failure {
-                  echo 'K8S Manifest Update failure !'
-                }
-                success {
-                  echo 'K8S Manifest Update success !'
-                }
-        }
+        // post {
+        //         failure {
+        //           echo 'K8S Manifest Update failure !'
+        //         }
+        //         success {
+        //           echo 'K8S Manifest Update success !'
+        //         }
+        // }
     }
 
         }
