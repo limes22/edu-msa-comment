@@ -37,7 +37,7 @@ pipeline
             steps {
             	sh 'pwd'
                 sh 'mvn -f pom.xml clean install -P release'
-              	archive './*.war'
+              	archive '**/target/*.war'
             }
         }
 
