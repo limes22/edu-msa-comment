@@ -38,7 +38,7 @@ pipeline
             	sh 'pwd'
                 sh 'mvn -f pom.xml clean install -P release'
               	// archive '**/target/*.war'
-                // sh 'cp /var/jenkins_home/jobs/build/$BUILD_NUMBER/archive/target/*war $WORKSPACE'
+                sh 'cp $WORKSPACE/target/*.war $WORKSPACE'
             }
         }
 
