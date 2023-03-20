@@ -78,7 +78,7 @@ pipeline
                 sh '''
                 git config --global user.email howdi2002@naver.com
                 git config --global user.name limes22
-                sed -i 's|${REPOSITORY}:1.0.*|${REPOSITORY}:1.0.${BUILD_NUMBER}|' ./yaml/edu-msa-comment.yaml
+                sed -i 's|howdi2000/edu-msa-commnet:1.0.*|howdi2000/edu-msa-commnet:1.0.$BUILD_NUMBER|' ./yaml/edu-msa-comment.yaml
                         git add ./yaml/edu-msa-comment.yaml
                         git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
                         git push -uf origin main
