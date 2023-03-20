@@ -69,5 +69,29 @@ pipeline
         }
     }
 
+        stage('K8S Manifest Update') {
+        steps {
+            git credentialsId: '{github-secret}',
+                url: 'https://github.com/limes22/edu-msa-comment.git',
+                branch: 'main'
+
+            sh '''
+                sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' deployment.yaml
+                git add deployment.yaml
+                git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
+                git remote set-url origin https://github.com/limes22/edu-msa-comment.git
+                git push -u origin main
+            '''
+        }
+        post {
+                failure {
+                  echo 'K8S Manifest Update failure !'
+                }
+                success {
+                  echo 'K8S Manifest Update success !'
+                }
+        }
+    }
+
         }
     }
