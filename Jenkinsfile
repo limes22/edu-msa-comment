@@ -76,10 +76,12 @@ pipeline
                 branch: 'main'
 
             sh '''
+                git remote set-url origin https://github.com/limes22/edu-msa-comment.git
+                git config global user.email howdi2002@naver.com
+                git config global user.name limes22
                 sed -i 's/$REPOSITORY:.*\$/$REPOSITORY:$BUILD_NUMBER/g' ./yaml/edu-msa-comment.yaml
                 git add ./yaml/edu-msa-comment.yaml
                 git commit -m '[UPDATE] $REPOSITORY $BUILD_NUMBER image versioning'
-                git remote set-url origin https://github.com/limes22/edu-msa-comment.git
                 git push -u origin main
             '''
         }
